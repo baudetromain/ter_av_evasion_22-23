@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(shellcode_dropper)
+project(shellcode_dropper_no_obfuscation)
 
 set(CMAKE_CXX_STANDARD 14)
 

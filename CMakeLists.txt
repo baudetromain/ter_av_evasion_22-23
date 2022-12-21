@@ -5,6 +5,11 @@ project(av_evasion_ter_22-23)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# add an executable called unobfuscated_calc that will be build from the src/no_obfuscation/shellcode_dropper.cpp file
+add_executable(unobfuscated_calc src/no_obfuscation/shellcode_dropper.cpp)
+# make the executable be able to include the header files in the shellcodes/unobfuscated_calc directory
+target_include_directories(unobfuscated_calc PUBLIC shellcodes/unobfuscated_calc)
+
 # add an executable called unobfuscated_staged_meterpreter_reverse_shell that will be built from the src/no_obfuscation/shellcode_dropper.cpp file
 add_executable(unobfuscated_staged_meterpreter_reverse_shell src/no_obfuscation/shellcode_dropper.cpp)
 # make the executable be able to include the header files in the shellcodes/unobfuscated_staged_meterpreter_reverse_shell directory

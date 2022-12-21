@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.23.2)
+
+project(av_evasion_ter_22-23)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# add an executable called unobfuscated_staged_meterpreter_reverse_shell that will be built from the src/no_obfuscation/shellcode_dropper.cpp file
+add_executable(unobfuscated_staged_meterpreter_reverse_shell src/no_obfuscation/shellcode_dropper.cpp)
+# make the executable be able to include the header files in the shellcodes/unobfuscated_staged_meterpreter_reverse_shell directory
+target_include_directories(unobfuscated_staged_meterpreter_reverse_shell PUBLIC shellcodes/unobfuscated_staged_meterpreter_reverse_shell)
+
+# add an executable called unobfuscated_unstaged_meterpreter_reverse_shell that will be built from the src/no_obfuscation/shellcode_dropper.cpp file
+add_executable(unobfuscated_unstaged_meterpreter_reverse_shell src/no_obfuscation/shellcode_dropper.cpp)
+# make the executable be able to include the header files in the shellcodes/unobfuscated_unstaged_meterpreter_reverse_shell directory
+target_include_directories(unobfuscated_unstaged_meterpreter_reverse_shell PUBLIC shellcodes/unobfuscated_unstaged_meterpreter_reverse_shell)
+
+# add an executable called xored_staged_meterpreter_reverse_shell that will be built from the src/technique_1_encrypting_shellcode/shellcode_dropper.cpp file
+add_executable(xored_staged_meterpreter_reverse_shell src/technique_1_encrypting_shellcode/shellcode_dropper.cpp)
+# make the executable be able to include the header files in the shellcodes/xored_staged_meterpreter_reverse_shell directory
+target_include_directories(xored_staged_meterpreter_reverse_shell PUBLIC shellcodes/xored_staged_meterpreter_reverse_shell)
+
+# add an executable called xored_unstaged_meterpreter_reverse_shell that will be built from the src/technique_1_encrypting_shellcode/shellcode_dropper.cpp file
+add_executable(xored_unstaged_meterpreter_reverse_shell src/technique_1_encrypting_shellcode/shellcode_dropper.cpp)
+# make the executable be able to include the header files in the shellcodes/xored_unstaged_meterpreter_reverse_shell directory
+target_include_directories(xored_unstaged_meterpreter_reverse_shell PUBLIC shellcodes/xored_unstaged_meterpreter_reverse_shell)

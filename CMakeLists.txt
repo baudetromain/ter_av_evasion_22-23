@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Set the source file
 set(SOURCE_FILE src/no_obfuscation/shellcode_dropper.cpp)
 
+# Set the static linking flags
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+
 # Set the list of shellcodes
 set(SHELLCODES
         src/shellcodes/unobfuscated_calc.hpp
@@ -31,6 +34,10 @@ foreach(SHELLCODE ${SHELLCODES})
     target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=0)
     # Set the debug preprocessor definitions as above, but with debug=1
     target_compile_definitions(debug_${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=1)
+
+    # Set the static linking flags for both executables
+    set_target_properties(${SHELLCODE_NAME} PROPERTIES LINK_FLAGS "-static")
+    set_target_properties(debug_${SHELLCODE_NAME} PROPERTIES LINK_FLAGS "-static")
 
     # old line where the relative path was set by hand
     # target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="../../${SHELLCODE}")

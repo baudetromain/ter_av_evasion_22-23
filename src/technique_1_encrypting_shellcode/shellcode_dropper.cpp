@@ -1,7 +1,12 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
 #include <windows.h>
-#include "../../shellcodes/xored_staged_meterpreter_reverse_shell.hpp"
+
+#ifdef SHELLCODE_PATH
+#include SHELLCODE_PATH
+#else
+#include "../../src/shellcodes/xored_calc.hpp"
+#endif
 
 unsigned char key[] = "salut";
 

@@ -11,7 +11,7 @@ def main():
     output_filename = sys.argv[2]
     xor_key = sys.argv[3]
     
-    shellcode_bytes, shellcode_variable_name = parse_shellcode(shellcode_filename)
+    shellcode_bytes = parse_shellcode(shellcode_filename)
 
     if len(xor_key) > len(shellcode_bytes):
         print("Warning: the key is longer than the shellcode. Only a part of it will be used.")
@@ -20,15 +20,14 @@ def main():
 
     xor_key_bytes = key_to_bytes_array(xor_key)
     xored_shellcode_bytes = xor(shellcode_bytes, xor_key_bytes)
-    write_shellcode_to_file(xored_shellcode_bytes, output_filename, shellcode_variable_name)
+    write_shellcode_to_file(xored_shellcode_bytes, output_filename)
     
     
 def parse_shellcode(filename):
     file_lines = get_file_lines(filename)
-    shellcode_variable_name = get_shellcode_variable_name(file_lines)
     shellcode_string = filter_shellcode(file_lines)
     shellcode_bytes = string_to_bytes(shellcode_string)
-    return shellcode_bytes, shellcode_variable_name
+    return shellcode_bytes
     
     
 def get_file_lines(filename):
@@ -38,14 +37,6 @@ def get_file_lines(filename):
             lines.append(line)
         file.close()
         return lines
-
-
-def get_shellcode_variable_name(lines):
-    regex = re.compile("^.*unsigned char (.+)\\[\\] =.*$")
-    for line in lines:
-        match = regex.match(line)
-        if match:
-            return match.group(1)
         
         
 def filter_shellcode(lines):
@@ -73,10 +64,10 @@ def xor(shellcode_bytes, key_bytes):
     return xored_shellcode_bytes
 
 
-def write_shellcode_to_file(shellcode_bytes, filename, shellcode_variable_name):
+def write_shellcode_to_file(shellcode_bytes, filename):
     line_length = 15
     content = ""
-    content += (f"unsigned char xored_{shellcode_variable_name}[] =\n")
+    content += (f"unsigned char shellcode[] =\n")
     bytes_chunks = [shellcode_bytes[x:x+line_length] for x in range(0, len(shellcode_bytes), line_length)]
     for bytes_chunk in bytes_chunks:
         content += bytes_to_shellcode(bytes_chunk)

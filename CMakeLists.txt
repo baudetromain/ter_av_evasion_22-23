@@ -24,9 +24,14 @@ foreach(SHELLCODE ${SHELLCODES})
 
     # Create an executable for the current shellcode
     add_executable(${SHELLCODE_NAME} ${SOURCE_FILE})
+    # Create another executable called the same but starting with "debug_"
+    add_executable(debug_${SHELLCODE_NAME} ${SOURCE_FILE})
 
     # Add the current shellcode as a preprocessor definition for the executable, called SHELLCODE_PATH, but add the absolute path to the file
-    target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}")
+    target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=0)
+    # Set the debug preprocessor definitions as above, but with debug=1
+    target_compile_definitions(debug_${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=1)
+
     # old line where the relative path was set by hand
     # target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="../../${SHELLCODE}")
 endforeach()

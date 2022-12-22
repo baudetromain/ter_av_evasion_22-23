@@ -27,6 +27,10 @@ int main()
 		   shellcode,
 		   sizeof(shellcode));
 
+#if DEBUG
+	__asm__("int3");
+#endif
+
 	// Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,
 				 0,

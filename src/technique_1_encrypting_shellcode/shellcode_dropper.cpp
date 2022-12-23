@@ -9,7 +9,6 @@
 #include "../../src/shellcodes/xored_calc.hpp"
 #endif
 
-unsigned char key[] = "salut";
 
 // This function will xor the payload with the key in order to decrypt it
 void decrypt_payload(unsigned char* payload, unsigned int payload_size, const unsigned char xor_key[], unsigned int key_size)
@@ -58,7 +57,7 @@ int main()
 #endif
 
 	// Decrypt the payload
-	decrypt_payload((unsigned char*) memory, sizeof(shellcode), key, strlen((char*) key));
+	decrypt_payload((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
 
 #if DEBUG
 	printf("Shellcode decrypted\n");

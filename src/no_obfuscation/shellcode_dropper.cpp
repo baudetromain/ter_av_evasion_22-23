@@ -1,7 +1,7 @@
 // This program's goal is to try to create a new process to execute a shellcode that will open a calculator
 
 #include <windows.h>
-#include <iostream>
+#include <cstdio>
 
 #ifdef SHELLCODE_PATH
 #include SHELLCODE_PATH

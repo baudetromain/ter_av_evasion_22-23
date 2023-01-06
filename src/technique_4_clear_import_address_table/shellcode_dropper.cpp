@@ -19,6 +19,7 @@ void my_xor(unsigned char data[], int size, const unsigned char key[], int key_s
 int main()
 {
 
+	// The #include is done here, because when done before the main function, the symbols' names can be found in the binary
 #include "functions.hpp"
 
 	// Step 1 : Get the addresses of the functions we want to call

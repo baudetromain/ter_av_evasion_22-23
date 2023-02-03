@@ -33,7 +33,7 @@ def encrypt(hex_list, key):
   return encrypted
 
 #Put your shellcode here
-#Be careful, you can keep the several "" but it MUST be in ONE LINE
+#Be careful, you can keep the several "" but it MUST be in ONE LINE, remove semi-colon
 shellcode = "\x00\x01\xfe\xff\xf0\xe8\xcc\x00\x00\x00\x41\x51\x41\x50""\x52\x48\x31\xd2\x51\x56\x65\x48\x8b\x52\x60\x48\x8b\x52"
 
 shellcode = shellcode.replace('"', '')

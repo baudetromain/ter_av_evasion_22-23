@@ -5,4 +5,7 @@ We can either add an high level image entropy in the code.
 The second option is add some words of the english dictionnary.
 
 The paper we study recommand to encrypt our shellcode with one of these method. 
-My idea will be to SHA either the image or the words then takes the x first bits to encrypt the shellcode.
+
+We will do the second option and encrypt our shellcode using random words from dictionnary.
+
+The python script will do the encryption and will output 2 c++ array : the key and the encrypted shellcode

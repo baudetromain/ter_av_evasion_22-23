@@ -38,7 +38,7 @@ int main()
 #ifdef SHELLCODE_PATH
 #include SHELLCODE_PATH
 #else
-#include "../../src/shellcodes/unobfuscated_calc.hpp"
+#include "../../src/shellcodes/calc.hpp"
 #endif
 
     // Step 1 : Calculate the largest prime number (before a specific number)

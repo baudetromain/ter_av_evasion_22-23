@@ -91,9 +91,9 @@ set(SOURCE_FILE src/technique_3_sandbox_escape/shellcode_dropper.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
-        src/shellcodes/unobfuscated_calc.hpp
-        src/shellcodes/unobfuscated_unstaged_meterpreter_reverse_shell.hpp
-        src/shellcodes/unobfuscated_staged_meterpreter_reverse_shell.hpp
+        src/shellcodes/calc.hpp
+        src/shellcodes/unstaged_meterpreter_reverse_shell.hpp
+        src/shellcodes/staged_meterpreter_reverse_shell.hpp
         )
 
 # Loop over the list of shellcodes

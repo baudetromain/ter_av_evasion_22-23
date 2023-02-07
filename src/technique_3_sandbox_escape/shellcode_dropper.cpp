@@ -3,12 +3,6 @@
 #include <vector>
 #include <iostream>
 
-#ifdef SHELLCODE_PATH
-#include SHELLCODE_PATH
-#else
-#include "../../src/shellcodes/unobfuscated_calc.hpp"
-#endif
-
 
 int get_largest_prime_number(int end_number)
 {
@@ -29,17 +23,28 @@ int get_largest_prime_number(int end_number)
 
     test_sequence.clear();
 
+#if DEBUG
+	printf("Prime number computed : %d\n", largest_prime_number);
+	printf("Hit enter to continue\n");
+	getchar();
+#endif
+
     return largest_prime_number;
 }
 
 int main()
 {
 
+#ifdef SHELLCODE_PATH
+#include SHELLCODE_PATH
+#else
+#include "../../src/shellcodes/unobfuscated_calc.hpp"
+#endif
+
     // Step 1 : Calculate the largest prime number (before a specific number)
     // About 40 seconds on 11th Gen i5 4 Cores
-    int end_number = 400000;
+    int end_number = 100000;
     int largest_prime_number = get_largest_prime_number(end_number);
-    std::cout << "Largest prime number (before " << end_number << "): " << largest_prime_number << std::endl;
 
 #if DEBUG
 	printf("Shellcode is located at %p\n", shellcode);

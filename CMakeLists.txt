@@ -209,31 +209,40 @@ set(SHELLCODES
         src/shellcodes/xored_unstaged_meterpreter_reverse_shell.hpp
         )
 
-# Loop over the list of shellcodes
-foreach(SHELLCODE ${SHELLCODES})
-    # Extract the shellcode name from the file path
-    get_filename_component(SHELLCODE_NAME ${SHELLCODE} NAME_WE)
-    # old config used regex, but somehow it didn't work
-    # string(REGEX REPLACE ".*/([^/]*).hpp" "\\1" SHELLCODE_NAME ${SHELLCODE})
+# Set a list containing the numbers 100000, 400000 and 500000
+set(DELAY_LIST 100000 200000 300000 400000 500000)
 
-    # rename the currect SHELLCODE_NAME to remove the "xored_" prefix
-    string(REGEX REPLACE "xored_(.*)" "\\1" SHELLCODE_NAME ${SHELLCODE_NAME})
+# Loop over the numbers in DELAY_LIST
+foreach(DELAY ${DELAY_LIST})
 
-    # Create an executable for the current shellcode
-    # The name of the executable should be "all_techniques_" followed by the shellcode name
-    add_executable(all_techniques_${SHELLCODE_NAME} ${SOURCE_FILE})
-    # Create another executable called the same but starting with "all_techniques_" and ending with "_debug"
-    add_executable(all_techniques_${SHELLCODE_NAME}_debug ${SOURCE_FILE})
+    # Loop over the list of shellcodes
+    foreach(SHELLCODE ${SHELLCODES})
+        # Extract the shellcode name from the file path
+        get_filename_component(SHELLCODE_NAME ${SHELLCODE} NAME_WE)
+        # old config used regex, but somehow it didn't work
+        # string(REGEX REPLACE ".*/([^/]*).hpp" "\\1" SHELLCODE_NAME ${SHELLCODE})
 
-    # Add the current shellcode as a preprocessor definition for the executable, called SHELLCODE_PATH, but add the absolute path to the file
-    target_compile_definitions(all_techniques_${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=0)
-    # Set the debug preprocessor definitions as above, but with debug=1
-    target_compile_definitions(all_techniques_${SHELLCODE_NAME}_debug PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=1)
+        # rename the currect SHELLCODE_NAME to remove the "xored_" prefix
+        string(REGEX REPLACE "xored_(.*)" "\\1" SHELLCODE_NAME ${SHELLCODE_NAME})
 
-    # Set the static linking flags for both executables
-    set_target_properties(all_techniques_${SHELLCODE_NAME} PROPERTIES LINK_FLAGS "-static")
-    set_target_properties(all_techniques_${SHELLCODE_NAME}_debug PROPERTIES LINK_FLAGS "-static")
+        # Create an executable for the current shellcode
+        # The name of the executable should be "all_techniques_" followed by the shellcode name and ending with "_delay_" followed by the current delay
+        add_executable(all_techniques_${SHELLCODE_NAME}_delay_${DELAY} ${SOURCE_FILE})
+        # Create another executable called the same but starting with "all_techniques_" and ending with "_delay_" followed by the current delay and then "_debug"
+        add_executable(all_techniques_${SHELLCODE_NAME}_delay_${DELAY}_debug ${SOURCE_FILE})
 
-    # old line where the relative path was set by hand
-    # target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="../../${SHELLCODE}")
+        # Add the current shellcode as a preprocessor definition for the executable, called SHELLCODE_PATH, but add the absolute path to the file
+        # Also add a preprocessor definition called DELAY with the current delay
+        target_compile_definitions(all_techniques_${SHELLCODE_NAME}_delay_${DELAY} PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=0 PRIVATE DELAY=${DELAY})
+        # Set the debug preprocessor definitions as above, but with debug=1
+        target_compile_definitions(all_techniques_${SHELLCODE_NAME}_delay_${DELAY}_debug PRIVATE SHELLCODE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/${SHELLCODE}" PRIVATE DEBUG=1 PRIVATE DELAY=${DELAY})
+
+        # Set the static linking flags for both executables
+        set_target_properties(all_techniques_${SHELLCODE_NAME}_delay_${DELAY} PROPERTIES LINK_FLAGS "-static")
+        set_target_properties(all_techniques_${SHELLCODE_NAME}_delay_${DELAY}_debug PROPERTIES LINK_FLAGS "-static")
+
+        # old line where the relative path was set by hand
+        # target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="../../${SHELLCODE}")
+    endforeach()
+
 endforeach()

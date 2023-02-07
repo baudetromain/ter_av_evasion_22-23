@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <cstdio>
 #include <vector>
 #include <iostream>
 
@@ -43,7 +42,7 @@ int main()
 
     // Step 1 : Calculate the largest prime number (before a specific number)
     // About 40 seconds on 11th Gen i5 4 Cores
-    int end_number = 100000;
+    int end_number = 500000;
     int largest_prime_number = get_largest_prime_number(end_number);
 
 #if DEBUG

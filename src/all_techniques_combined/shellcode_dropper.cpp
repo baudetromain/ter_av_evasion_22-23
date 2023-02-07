@@ -109,7 +109,11 @@ int main()
 
     // Step 1 : Calculate the largest prime number (before a specific number)
     // About 40 seconds on 11th Gen i5 4 Cores
-    int end_number = 400000;
+#ifdef DELAY
+	int end_number = DELAY;
+#else
+	int end_number = 500000;
+#endif
     int largest_prime_number = get_largest_prime_number(end_number);
 
 	// Step 2 : deobfuscate all the names

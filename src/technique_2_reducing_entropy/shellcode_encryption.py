@@ -46,7 +46,7 @@ while len(table) < 256:
 #We need key + encoded shellcode to decode in c++
 
 content = ""
-content += "std:string key[256] = {"
+content += "std::string key[256] = {"
 for word in table:
     content += f"\"{word}\","
 content+= "};"
@@ -71,7 +71,7 @@ hex_list = [hex(ord(c)) for c in shellcode]
 
 encrypted = encrypt(hex_list,table)
 
-content += "\n\nstd:string encrypted["+str(len(encrypted))+"] = {"
+content += "\n\nstd::string encrypted["+str(len(encrypted))+"] = {"
 for word in encrypted:
     content+= f"\"{word}\","
 content += "};"

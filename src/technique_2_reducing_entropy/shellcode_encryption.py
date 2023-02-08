@@ -1,6 +1,6 @@
 # Takes ~ 30sec to execute
 # You need to add your shellcode
-# Output is Key + encrypted_shellcode in C++ 
+# Output is Key + encrypted_shellcode in C++
 
 
 # pip3 install random-word
@@ -44,18 +44,20 @@ while len(table) < 256:
 #First word correspond to 0X00, 256th word correspond to 0xff
 #C++ output because decoding takes place in C++
 #We need key + encoded shellcode to decode in c++
-print("string key[256] = {",end="")
+
+content = ""
+content += "std:string key[256] = {"
 for word in table:
-    print(f"\"{word}\",",end="")
-print("};")
+    content += f"\"{word}\","
+content+= "};"
 
 
 def encrypt(hex_list, key):
-  encrypted = []
-  for hex_value in hex_list:
-    index = int(hex_value, 16)
-    encrypted.append(key[index])
-  return encrypted
+    encrypted = []
+    for hex_value in hex_list:
+        index = int(hex_value, 16)
+        encrypted.append(key[index])
+    return encrypted
 
 #Put your shellcode here
 #Be careful, you can keep the several "" but it MUST be in ONE LINE, remove semi colon
@@ -69,7 +71,11 @@ hex_list = [hex(ord(c)) for c in shellcode]
 
 encrypted = encrypt(hex_list,table)
 
-print("\nstring encrypted["+str(len(encrypted))+"] = {",end="")
+content += "\n\nstd:string encrypted["+str(len(encrypted))+"] = {"
 for word in encrypted:
-    print(f"\"{word}\",",end="")
-print("};")
+    content+= f"\"{word}\","
+content += "};"
+
+file = open("output", "w")
+file.write(content)
+file.close()

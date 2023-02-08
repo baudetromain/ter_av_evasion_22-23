@@ -54,8 +54,8 @@ int main()
 
     }
     result = ss.str();
-    cout << result << "\n";
-
+ //   cout << result << "\n";
+/*
     std::string hex_chars(result);
 
     std::istringstream hex_chars_stream(hex_chars);
@@ -79,7 +79,7 @@ int main()
         cout << shellcode[i];
     }
 
-
+*/
 
 	// Step 1 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,

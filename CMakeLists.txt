@@ -93,6 +93,7 @@ set(SHELLCODES
         src/shellcodes/natural_language_calc.hpp
         src/shellcodes/natural_language_staged_meterpreter_reverse_shell.hpp
         src/shellcodes/natural_language_staged_reverse_shell.hpp
+        src/shellcodes/natural_language_unstaged_meterpreter_reverse_shell.hpp
         )
 
 # Loop over the list of shellcodes

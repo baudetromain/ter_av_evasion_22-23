@@ -25,7 +25,7 @@ def main():
                              "printing it to the console",
                         action="store_true",
                         required=False)
-
+    """
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-k", "--key",
                        dest="key",
@@ -36,29 +36,30 @@ def main():
                        help="Use this option to generate a random key (of the same length as the shellcode)",
                        action="store_true",
                        required=False)
-
+    """
     args = parser.parse_args()
 
     shellcode_bytes = parse_shellcode(args.input_file)
+    """
     if args.random_key:
         key = generate_random_key(len(shellcode_bytes))
     else:
         key = key_to_bytes_array(args.key)
+    
 
     if len(key) > len(shellcode_bytes):
         print("Warning: the key is longer than the shellcode. Only a part of it will be used.")
     elif len(key) < len(shellcode_bytes):
         print("Warning: the key is shorter than the shellcode. The shellcode will be encrypted by repeating the key, "
               "but it is advised to prompt a key that is as long as the shellcode.")
-
+    """
+    key = int("54",16)
     xored_shellcode_bytes = xor(shellcode_bytes, key)
     write_shellcode_to_file(xored_shellcode_bytes,
                             args.output_file,
-                            args.shellcode_variable_name,
-                            key=None if args.output_key else key)
+                            args.shellcode_variable_name)
     print(f"Shellcode encrypted and written to {args.output_file}")
-    if args.output_key:
-        print(f"Key: {bytes_to_shellcode(key)}")
+    
 
 
 def parse_shellcode(filename):
@@ -95,10 +96,10 @@ def key_to_bytes_array(key):
     return [ord(c) for c in key]
 
 
-def xor(shellcode_bytes, key_bytes):
+def xor(shellcode_bytes,key):
     xored_shellcode_bytes = []
     for i in range(len(shellcode_bytes)):
-        xored_shellcode_bytes.append(shellcode_bytes[i] ^ key_bytes[i % len(key_bytes)])
+        xored_shellcode_bytes.append(shellcode_bytes[i] ^ key)
     return xored_shellcode_bytes
 
 
@@ -111,11 +112,17 @@ def write_shellcode_to_file(shellcode_bytes, filename, shellcode_variable_name, 
         for bytes_chunk in bytes_chunks:
             content += f"\t\t{bytes_to_shellcode(bytes_chunk)}"
         content = content[:-1] + ";\n\n"
-    content += f"unsigned char {shellcode_variable_name}[] =\n"
+    content += f"unsigned char {shellcode_variable_name}[] =\n\""
+
+    for bytes in shellcode_bytes:
+        content+=  my_hex(bytes) + '\\x61\\x61'
+    content += "\";"
+    """
     bytes_chunks = [shellcode_bytes[x:x + line_length] for x in range(0, len(shellcode_bytes), line_length)]
     for bytes_chunk in bytes_chunks:
         content += f"\t\t{bytes_to_shellcode(bytes_chunk)}"
     content = content[:-1] + ";\n"
+    """
 
     file = open(filename, "w")
     file.write(content)

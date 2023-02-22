@@ -41,7 +41,7 @@ int main()
     int lenEncrypted = sizeof(encrypted)/sizeof(string);
 
     vector<int> decrypted;
-    unsigned char shellcode[lenEncrypted];
+    unsigned char shellcode[LEN];
 #if DEBUG
     printf("Start\n");
     printf("Hit enter to continue\n");

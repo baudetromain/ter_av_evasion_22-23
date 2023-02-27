@@ -15,12 +15,12 @@
 void decrypt_payload(unsigned char* payload, unsigned char* memory, unsigned int payload_size, const unsigned char xor_key)
 {
     int j = 0;
-	for (unsigned int i = 0; i < payload_size-1; i+=3)
-	{
+    for (unsigned int i = 0; i < payload_size-1; i+=3)
+    {
         memory[j] = payload[i] ^ xor_key;
         //std::cout <<  std::hex <<int(payload[i]);
         j++;
-	}
+    }
     /*
     for (unsigned int i = 0; i < (payload_size-1)/3; i+=1){
         std::cout <<  std::hex <<int(payload[i]);

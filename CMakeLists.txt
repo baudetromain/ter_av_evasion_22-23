@@ -277,9 +277,9 @@ set(SOURCE_FILE src/all_techniques_combined/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
-        src/shellcodes/xored_calc.hpp
-        src/shellcodes/xored_staged_meterpreter_reverse_shell.hpp
-        src/shellcodes/xored_unstaged_meterpreter_reverse_shell.hpp
+        src/shellcodes/xored_low_entropy_calc.hpp
+        src/shellcodes/xored_low_entropy_staged_meterpreter.hpp
+        src/shellcodes/xored_low_entropy_unstaged_meterpreter.hpp
         )
 
 # Set a list containing the numbers 100000, 400000 and 500000

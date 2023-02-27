@@ -126,6 +126,8 @@ set(SOURCE_FILE src/technique_2bis_reducing_entropy/shellcode_dropper.cpp)
 # Set the list of shellcodes
 set(SHELLCODES
         src/shellcodes/xored_low_entropy_staged_meterpreter.hpp
+        src/shellcodes/xored_low_entropy_unstaged_meterpreter.hpp
+        src/shellcodes/xored_low_entropy_calc.hpp
         )
 
 # Loop over the list of shellcodes

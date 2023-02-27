@@ -86,7 +86,7 @@ endforeach()
 
 # now let's do the same for the executable src/technique_2_reducing_entropy/shellcode_dropper.cpp
 # Set the source file
-set(SOURCE_FILE src/technique_2_reducing_entropy/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_2_reducing_entropy/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -121,7 +121,7 @@ foreach(SHELLCODE ${SHELLCODES})
     # target_compile_definitions(${SHELLCODE_NAME} PRIVATE SHELLCODE_PATH="../../${SHELLCODE}")
 endforeach()
 
-set(SOURCE_FILE src/technique_2bis_reducing_entropy/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_2bis_reducing_entropy/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES

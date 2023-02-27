@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 # Set the source file
-set(SOURCE_FILE src/no_obfuscation/shellcode_dropper.cpp)
+set(SOURCE_FILE src/no_obfuscation/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -46,7 +46,7 @@ endforeach()
 
 # now let's do the same for the executable src/technique_1_encrypting_shellcode/sheellcode_dropper.cpp
 # Set the source file
-set(SOURCE_FILE src/technique_1_encrypting_shellcode/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_1_encrypting_shellcode/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -160,7 +160,7 @@ foreach(SHELLCODE ${SHELLCODES})
 endforeach()
 # now let's do the same for the executable src/technique_3_sandbox_escape/sheellcode_dropper.cpp
 # Set the source file
-set(SOURCE_FILE src/technique_3_sandbox_escape/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_3_sandbox_escape/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -195,9 +195,9 @@ foreach(SHELLCODE ${SHELLCODES})
 endforeach()
 
 
-# now let's do the same for the executable src/technique_4_clear_import_address_table/shellcode_dropper.cpp
+# now let's do the same for the executable src/technique_4_clear_import_address_table/main.cpp
 # Set the source file
-set(SOURCE_FILE src/technique_4_clear_import_address_table/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_4_clear_import_address_table/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -233,9 +233,9 @@ foreach(SHELLCODE ${SHELLCODES})
 endforeach()
 
 
-# now let's do the same for the executable src/technique_5_bypassing_etw/shellcode_dropper.cpp
+# now let's do the same for the executable src/technique_5_bypassing_etw/main.cpp
 # Set the source file
-set(SOURCE_FILE src/technique_5_bypassing_etw/shellcode_dropper.cpp)
+set(SOURCE_FILE src/technique_5_bypassing_etw/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
@@ -273,7 +273,7 @@ endforeach()
 
 # now let's do the same for the executable src/all_techniques_combined/sheellcode_dropper.cpp
 # Set the source file
-set(SOURCE_FILE src/all_techniques_combined/shellcode_dropper.cpp)
+set(SOURCE_FILE src/all_techniques_combined/main.cpp)
 
 # Set the list of shellcodes
 set(SHELLCODES
